@@ -3,12 +3,14 @@ package com.utn.RecuParcial.service;
 import com.utn.RecuParcial.model.Cumpleanitos;
 import com.utn.RecuParcial.model.Persona;
 import com.utn.RecuParcial.repository.CumpleanitoRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CumpleanitoService {
@@ -17,6 +19,7 @@ public class CumpleanitoService {
     CumpleanitoRepository cumpleanitoRepository;
     @Autowired
     PersonaService personaService;
+
 
     public void add(Cumpleanitos cumple) {
         cumpleanitoRepository.save(cumple);
@@ -50,5 +53,10 @@ public class CumpleanitoService {
         cumple.getInvitados().add(invitado);
         cumpleanitoRepository.save(cumple);
 
+    }
+
+    public Set<Persona> getInvitados(Integer id) {
+        Cumpleanitos cumple = getByID(id);
+        return cumple.getInvitados();
     }
 }
