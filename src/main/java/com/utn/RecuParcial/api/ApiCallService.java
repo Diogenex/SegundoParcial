@@ -1,24 +1,28 @@
 package com.utn.RecuParcial.api;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 
 @Service
 @Slf4j
 public class ApiCallService {
 
+
     @CircuitBreaker(name = "Euros", fallbackMethod = "fallback")
-    public EuroResponse getCotiEuro() throws IOException, InterruptedException {
+    public List<EuroResponse> getCotiEuro() throws IOException, InterruptedException {
 
         if (RandomUtils.nextBoolean()) {
             throw new RuntimeException("");
@@ -32,13 +36,14 @@ public class ApiCallService {
 
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println(response.body());
-        final EuroResponse euroResponse = new Gson().fromJson(response.body(), EuroResponse.class);
-        System.out.println(euroResponse);
+        Type collectionType = new TypeToken<List<EuroResponse>>(){}.getType();
+        final List<EuroResponse> euroResponse =  new Gson()
+                .fromJson( response.body() , collectionType);
         return euroResponse;
     }
 
     @CircuitBreaker(name = "Dolar", fallbackMethod = "fallbackdolar")
-    public DolarResponse getCotiDolar() throws IOException, InterruptedException {
+    public List<DolarResponse> getCotiDolar() throws IOException, InterruptedException {
 
         if (RandomUtils.nextBoolean()) {
             throw new RuntimeException("");
@@ -52,20 +57,22 @@ public class ApiCallService {
 
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println(response.body());
-        final DolarResponse dolarResponse = new Gson().fromJson(response.body(), DolarResponse.class);
-        System.out.println(dolarResponse);
-        return dolarResponse;
+        Type collectionType = new TypeToken<List<DolarResponse>>(){}.getType();
+        final List<DolarResponse> lcs =  new Gson()
+                .fromJson( response.body() , collectionType);
+        System.out.println(lcs);
+        return lcs;
     }
 
 
-    public EuroResponse fallback(final Throwable t) {
+    public List<EuroResponse> fallback(final Throwable t) {
         log.info("Fallback cause, {}", t.toString());
-        return EuroResponse.builder().build();
+        return null;
     }
 
-    public DolarResponse fallbackdolar(final Throwable t) {
+    public List<DolarResponse> fallbackdolar(final Throwable t) {
         log.info("Fallback cause, {}", t.toString());
-        return DolarResponse.builder().build();
+        return  null;
     }
 
 }

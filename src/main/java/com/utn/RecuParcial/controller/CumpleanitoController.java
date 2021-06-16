@@ -1,6 +1,7 @@
 package com.utn.RecuParcial.controller;
 
 import com.utn.RecuParcial.model.Cumpleanitos;
+import com.utn.RecuParcial.model.Deudor;
 import com.utn.RecuParcial.model.Persona;
 import com.utn.RecuParcial.service.CumpleanitoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,8 +20,9 @@ public class CumpleanitoController {
 
     @Operation(summary = "Ingresar un cumpleaños ")
     @PostMapping
-    public void addCumpleanito(@RequestBody Cumpleanitos cumple) {
-        cumpleanitoService.add(cumple);
+    public String addCumpleanito(@RequestBody Cumpleanitos cumple) {
+        Cumpleanitos cumpleNuevo = cumpleanitoService.add(cumple);
+        return ("Cumple Creado: " + cumpleNuevo);
     }
 
     @Operation(summary = "Obtener todos los cumpleaños ")
@@ -37,20 +39,23 @@ public class CumpleanitoController {
 
     @Operation(summary = "Saber deudores de una fiesta ")
     @GetMapping("/deudores/{id}")
-    public Set<Persona> getDeudoresInvitados(@PathVariable Integer id) {
+    public List<Deudor> getDeudoresInvitados(@PathVariable Integer id) {
         return cumpleanitoService.getInvitados(id);
     }
+
     @Operation(summary = "Borrar Cumple ")
     @DeleteMapping("/{id}")
     public void deletePersona(@PathVariable Integer id){
         cumpleanitoService.delete(id);
     }
 
+    @Operation(summary = "Agregar Cumpleañero ")
     @PutMapping("/{id}/personas/{idPersona}")
     public void addJugadorToPerson(@PathVariable Integer id, @PathVariable Integer idPersona) {
         cumpleanitoService.addPersonToCumple(id,idPersona);
     }
 
+    @Operation(summary = "Agregar Invitados ")
     @PutMapping("/{id}/invitados/{idPersona}")
     public void addInvitados(@PathVariable Integer id, @PathVariable Integer idPersona) {
         cumpleanitoService.addInvitados(id,idPersona);

@@ -24,7 +24,7 @@ public class Cumpleanitos {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "persona_id")
     @Size(max = 10)
-    private Set<Persona> invitados;
+    private Set<Jugador> invitados;
 
 
 

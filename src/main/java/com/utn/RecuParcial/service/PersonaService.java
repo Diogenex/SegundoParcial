@@ -60,4 +60,9 @@ public class PersonaService {
             }
         }
     }
+
+    public Jugador getJugadorByID(Integer idPersona) {
+        return (Jugador) personaRepository.findById(idPersona)
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+    }
 }

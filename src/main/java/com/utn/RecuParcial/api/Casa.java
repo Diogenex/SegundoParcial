@@ -12,10 +12,10 @@ public class Casa {
     private String nombre;
 
     @SerializedName("compra")
-    private Float compra;
+    private String compra;
 
     @SerializedName("venta")
-    private Float venta;
+    private String venta;
 
     @SerializedName("agencia")
     private String agencia;
