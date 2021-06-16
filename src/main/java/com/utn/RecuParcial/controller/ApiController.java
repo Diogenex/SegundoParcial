@@ -2,6 +2,8 @@ package com.utn.RecuParcial.controller;
 
 
 import com.utn.RecuParcial.api.*;
+import com.utn.RecuParcial.api.Crack.CrackResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,11 @@ public class ApiController {
         return api.getDolarEnchages();
     }
 
+    @Operation(summary = "Obtiene una lista de jugadores Mayores a 1.80 de altura y Menor de 20 años.")
+    @GetMapping("/promesas")
+    public CrackResponse getCracks() throws IOException, InterruptedException {
+        return apiCallService.getCracks();
+    }
 
 
 

@@ -2,6 +2,7 @@ package com.utn.RecuParcial.api;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.utn.RecuParcial.api.Crack.CrackResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
@@ -64,6 +65,33 @@ public class ApiCallService {
         return lcs;
     }
 
+    @CircuitBreaker(name = "Cracks", fallbackMethod = "fallbackcrack")
+    public CrackResponse getCracks() throws IOException, InterruptedException {
+
+        if (RandomUtils.nextBoolean()) {
+            throw new RuntimeException("");
+        }
+
+        HttpRequest request = HttpRequest.newBuilder()
+                //Filtro en la consulta los requerimientos de menor de 20 y mayor a 1,80 cm
+                .uri(URI.create("https://app.sportdataapi.com/api/v1/soccer/players?apikey=a598b780-cee6-11eb-90c0-cf84697bf776&country_id=13&max_age=20&min_height=180"))
+                .header("accept", "application/json")
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+
+        final CrackResponse lcs =  new Gson()
+                .fromJson( response.body() , CrackResponse.class);
+        System.out.println(lcs);
+        return lcs;
+    }
+
+    public CrackResponse fallbackcrack(final Throwable t) {
+        log.info("Fallback cause, {}", t.toString());
+        return null;
+    }
 
     public List<EuroResponse> fallback(final Throwable t) {
         log.info("Fallback cause, {}", t.toString());
