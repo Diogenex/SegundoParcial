@@ -1,7 +1,6 @@
 package com.utn.RecuParcial.api.Crack;
 
 import com.google.gson.annotations.SerializedName;
-import com.utn.RecuParcial.api.Crack.Country;
 import lombok.Builder;
 import lombok.Data;
 
